@@ -36,8 +36,8 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="AddContact" component={AddContact} />
-          <Stack.Screen name="EditContact" component={EditContact} />
+          <Stack.Screen name="AddContact" options={{ headerShown: false }} />
+          <Stack.Screen name="Edit/[id]" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </ContactsProvider>

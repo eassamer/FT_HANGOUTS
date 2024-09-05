@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext, useState } from "react";
 
 export interface Contact {
@@ -12,37 +13,67 @@ export interface Contact {
 export const ContactsContext = createContext({
   contacts: [] as Contact[],
   setContacts: (contacts: Contact[]) => {},
-  addContact: (contact: Contact) => {},
+  addContact: async (contact: Contact) => {},
   deleteContact: (id: number) => {},
   updateContact: (id: number, updatedContact: Contact) => {},
   getContacts: () => {},
-  getContactById: (id: number) => {},
+  getContactById: (id: number): Contact | undefined => {
+    return undefined;
+  },
 });
 
 export const ContactsProvider = ({ children }: any) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  const addContact = (contact: Contact) => {
-    setContacts([...contacts, contact]);
+  const addContact = async (contact: Contact) => {
+    try {
+      const response: any = await axios.post("http://localhost:3000/contacts", {
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone,
+        address: contact.address,
+        notes: contact.notes,
+      });
+      console.log("data sent", response);
+      setContacts([...contacts, response.data.contact]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const deleteContact = (id: number) => {
-    setContacts(contacts.filter((contact) => contact.id !== id));
+    try {
+      axios.delete(`http://localhost:3000/contacts/${id}`);
+      setContacts(contacts.filter((contact) => contact.id !== id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const updateContact = (id: number, updatedContact: Contact) => {
-    setContacts(
-      contacts.map((contact) =>
-        contact.id === id ? { ...contact, ...updatedContact } : contact
-      )
-    );
+    try {
+      axios.put(`http://localhost:3000/contacts/${id}`, {
+        name: updatedContact.name,
+        email: updatedContact.email,
+        phone: updatedContact.phone,
+        address: updatedContact.address,
+        notes: updatedContact.notes,
+      });
+      setContacts(
+        contacts.map((contact) =>
+          contact.id === id ? updatedContact : contact
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getContacts = () => {
     return contacts;
   };
 
-  const getContactById = (id: number) => {
+  const getContactById = (id: number): Contact | undefined => {
     return contacts.find((contact) => contact.id === id);
   };
 

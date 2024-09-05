@@ -1,5 +1,6 @@
 import { ContactsContext } from "@/components/ContactsContext";
 import axios from "axios";
+import { router } from "expo-router";
 import { useContext, useEffect } from "react";
 import {
   View,
@@ -30,26 +31,13 @@ export default function Index() {
   }, []);
 
   const handleAddContact = () => {
-    navigation.navigate('AddContact'); // Navigate to the AddContact screen
+    router.push("/AddContact");
   };
-  const handleDeleteContact = (id: number) => {
-    Alert.alert(
-      "Delete Contact",
-      "Are you sure you want to delete this contact?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => {
-            deleteContact(id);
-          },
-        },
-      ]
-    );
+
+  const handleEditContact = (id: number) => {
+    router.push(`/Edit/${id}`);
   };
+
   // display a flat list of contacts and just name and number with some styles
   return (
     <View style={styles.container}>
@@ -67,13 +55,17 @@ export default function Index() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleEditContact(item)}
+                onPress={() => {
+                  handleEditContact(item.id);
+                }}
               >
                 <Text style={styles.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleDeleteContact(item.id)}
+                onPress={() => {
+                  deleteContact(item.id);
+                }}
               >
                 <Text style={styles.buttonText}>Delete</Text>
               </TouchableOpacity>
@@ -90,6 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "#f5f5f5",
+    gap: 10,
   },
   contactItem: {
     padding: 15,
