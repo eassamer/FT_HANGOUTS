@@ -8,7 +8,7 @@ const port = 3000;
 // Middleware
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: "http://localhost:8081", // The origin of your Expo app
+  origin: "http://localhost:8081",
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type",
 };
