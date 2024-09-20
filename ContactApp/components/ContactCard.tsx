@@ -1,11 +1,10 @@
+import { router } from "expo-router";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 export const ContactCard = ({
   Name = "El Mehdi Assamer",
   Number = "+212 6 00 00 00 00",
-  Email = "3nqFP@example.com",
-  Address = "Cite 1er Novembre, Rabat",
-  Notes = "Lorem ipsum dolor sit amet",
+  mainColor = "#000",
   id = 1,
 }: {
   Name?: string;
@@ -14,9 +13,16 @@ export const ContactCard = ({
   Address?: string;
   Notes?: string;
   id?: number;
+  mainColor?: string;
 }) => {
   return (
-    <TouchableOpacity onPress={() => {}} key={id} style={styles.container}>
+    <TouchableOpacity
+      onPress={() => {
+        router.push(`/Profile/${id}`);
+      }}
+      key={id}
+      style={{ ...styles.container, backgroundColor: mainColor }}
+    >
       <Text style={styles.Name}>{Name}</Text>
       <Text style={styles.subTitle}>{Number}</Text>
     </TouchableOpacity>
@@ -32,7 +38,7 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: "flex-start",
     backgroundColor: "#3e43e3",
-    borderRadius: 10,
+    borderRadius: 7,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginBottom: 15,

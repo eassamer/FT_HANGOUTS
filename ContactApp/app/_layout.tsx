@@ -8,6 +8,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ContactsProvider } from "@/components/ContactsContext";
@@ -33,11 +34,14 @@ export default function RootLayout() {
 
   return (
     <ContactsProvider>
+      <Card></Card>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="AddContact" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="Edit/[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="Profile/[id]" options={{ headerShown: false }} />
+          <Stack.Screen name="AddContact" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </ContactsProvider>

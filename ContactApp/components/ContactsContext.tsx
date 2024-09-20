@@ -11,6 +11,7 @@ export interface Contact {
 }
 
 export const ContactsContext = createContext({
+  mainColor: "#000",
   contacts: [] as Contact[],
   setContacts: (contacts: Contact[]) => {},
   addContact: async (contact: Contact) => {},
@@ -20,11 +21,12 @@ export const ContactsContext = createContext({
   getContactById: (id: number): Contact | undefined => {
     return undefined;
   },
+  changeColor: (color: string) => {},
 });
 
 export const ContactsProvider = ({ children }: any) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
-
+  const [mainColor, setMainColor] = useState<string>("#000");
   const addContact = async (contact: Contact) => {
     try {
       const response: any = await axios.post("http://localhost:3000/contacts", {
@@ -68,7 +70,9 @@ export const ContactsProvider = ({ children }: any) => {
       console.error(error);
     }
   };
-
+  const changeColor = (color: string) => {
+    setMainColor(color);
+  };
   const getContacts = () => {
     return contacts;
   };
@@ -80,6 +84,7 @@ export const ContactsProvider = ({ children }: any) => {
   return (
     <ContactsContext.Provider
       value={{
+        mainColor,
         contacts,
         setContacts,
         addContact,
@@ -87,6 +92,7 @@ export const ContactsProvider = ({ children }: any) => {
         updateContact,
         getContacts,
         getContactById,
+        changeColor,
       }}
     >
       {children}

@@ -1,213 +1,109 @@
-import { ContactsContext } from "@/components/ContactsContext";
-import axios from "axios";
 import { router } from "expo-router";
-import { useContext, useEffect } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
-  Button,
   TouchableOpacity,
-  Alert,
-  ScrollView,
+  TextInput,
 } from "react-native";
 
-// export default function Index() {
-//   const { contacts, setContacts, deleteContact } = useContext(ContactsContext);
+export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  if (isLoggedIn) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.headText}>Welcome To 42Contacts</Text>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/home");
+          }}
+          style={styles.loginButton}
+        >
+          <Text style={styles.loginText}>HomePage</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
-//   // api to getconstacts from server http://localhost:3000/contacts
-//   useEffect(() => {
-//     const fetchContacts = async () => {
-//       try {
-//         const response = await axios.get("http://localhost:3000/contacts");
-//         console.log(response.data.contacts);
-//         setContacts(response.data.contacts);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
+  const handleLogin = () => {
+    if (email === "admin" && password === "admin") {
+      router.push("/home");
+    } else {
+      setErrorMessage("Invalid Email or Password");
+    }
+  };
 
-//     fetchContacts();
-//   }, []);
-
-//   const handleAddContact = () => {
-//     router.push("/AddContact");
-//   };
-
-//   const handleEditContact = (id: number) => {
-//     router.push(`/Edit/${id}`);
-//   };
-
-//   // display a flat list of contacts and just name and number with some styles
-//   return (
-//     <View style={styles.container}>
-//       <Button title="Add Contact" onPress={handleAddContact} />
-//       <FlatList
-//         data={contacts}
-//         keyExtractor={(item) => item.id.toString()}
-//         renderItem={({ item }) => (
-//           <View style={styles.contactItem}>
-//             <Text style={styles.contactName}>{item.name}</Text>
-//             <Text>{item.phone}</Text>
-//             <Text>{item.email}</Text>
-//             <Text>{item.address}</Text>
-//             <Text>{item.notes}</Text>
-//             <View style={styles.buttonContainer}>
-//               <TouchableOpacity
-//                 style={styles.button}
-//                 onPress={() => {
-//                   handleEditContact(item.id);
-//                 }}
-//               >
-//                 <Text style={styles.buttonText}>Edit</Text>
-//               </TouchableOpacity>
-//               <TouchableOpacity
-//                 style={styles.button}
-//                 onPress={() => {
-//                   deleteContact(item.id);
-//                 }}
-//               >
-//                 <Text style={styles.buttonText}>Delete</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         )}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//     backgroundColor: "#f5f5f5",
-//     gap: 10,
-//   },
-//   contactItem: {
-//     padding: 15,
-//     marginBottom: 10,
-//     backgroundColor: "#fff",
-//     borderRadius: 5,
-//     shadowColor: "#000",
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//     elevation: 2,
-//   },
-//   contactName: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//   },
-//   buttonContainer: {
-//     flexDirection: "row",
-//     marginTop: 10,
-//   },
-//   button: {
-//     backgroundColor: "#007bff",
-//     padding: 10,
-//     borderRadius: 5,
-//     marginRight: 10,
-//   },
-//   buttonText: {
-//     color: "#fff",
-//     fontWeight: "bold",
-//   },
-// });
-
-// redesign the mainPage
-import { IoIosContact } from "react-icons/io";
-import { ContactCard } from "@/components/ContactCard";
-
-export default function Index() {
   return (
     <View style={styles.container}>
-      <View style={styles.headerSection}>
-        <IoIosContact size={40} color="#fff" />
-        <Text style={styles.textTest}>Contacts App</Text>
-      </View>
-      <ScrollView style={styles.bodySection}>
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        <ContactCard />
-        
-      </ScrollView>
+      <Text style={styles.headText}>Welcome To 42Contacts</Text>
+      <TextInput
+        onChangeText={setEmail}
+        value={email}
+        style={styles.loginInput}
+        placeholder="Enter Email"
+      />
+      <TextInput
+        secureTextEntry
+        onChangeText={setPassword}
+        value={password}
+        style={styles.loginInput}
+        placeholder="Enter Password"
+      />
+      <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+      <Text style={styles.errorMsg}>{errorMessage}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#000",
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f5f5f5",
+    gap: 30,
   },
-  headerSection: {
+  errorMsg: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "semibold",
+  },
+  headText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  loginInput: {
     width: "100%",
-    height: 70,
+    borderWidth: 1,
+    height: 40,
+    borderColor: "#000",
+    borderRadius: 4,
+    padding: 10,
+    letterSpacing: 1.5,
+    fontWeight: "bold",
+  },
+  loginButton: {
+    backgroundColor: "#000",
+    borderRadius: 10,
+    width: "80%",
+    paddingVertical: 15,
     display: "flex",
     flexDirection: "row",
-    gap: 10,
+    gap: 5,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#3e43e3",
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
   },
-  textTest: {
+  loginText: {
     color: "#fff",
-    fontSize: 20,
     fontWeight: "bold",
-    letterSpacing: 1.5,
-    textTransform: "uppercase",
-  },
-  bodySection: {
-    width: "100%",
-    height: "100%",
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    fontSize: 16,
   },
 });
