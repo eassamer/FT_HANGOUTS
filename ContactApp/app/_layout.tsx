@@ -34,7 +34,6 @@ export default function RootLayout() {
 
   return (
     <ContactsProvider>
-      <Card></Card>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

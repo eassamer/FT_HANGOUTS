@@ -1,0 +1,5 @@
+my-server/node_modules/
+my-server/package-lock.json
+my-server/contacts.db
+ContactApp/node_modules/
+ContactApp/package-lock.json
