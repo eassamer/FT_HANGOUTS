@@ -12,6 +12,10 @@ export interface Contact {
 
 export const ContactsContext = createContext({
   mainColor: "#000",
+  AuthenticationKey: "",
+  setAuthenticationKey: (key: string) => {},
+  isAuthenticated: false,
+  setIsAuthenticated: (isAuthenticated: boolean) => {},
   contacts: [] as Contact[],
   setContacts: (contacts: Contact[]) => {},
   addContact: async (contact: Contact) => {},
@@ -27,6 +31,8 @@ export const ContactsContext = createContext({
 export const ContactsProvider = ({ children }: any) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [mainColor, setMainColor] = useState<string>("#000");
+  const [AuthenticationKey, setAuthenticationKey] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const addContact = async (contact: Contact) => {
     try {
       const response: any = await axios.post("http://localhost:3000/contacts", {
@@ -93,6 +99,10 @@ export const ContactsProvider = ({ children }: any) => {
         getContacts,
         getContactById,
         changeColor,
+        AuthenticationKey,
+        setAuthenticationKey,
+        isAuthenticated,
+        setIsAuthenticated,
       }}
     >
       {children}

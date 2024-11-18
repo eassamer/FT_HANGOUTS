@@ -1,3 +1,4 @@
+import axios from "axios";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -10,7 +11,7 @@ import {
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   if (isLoggedIn) {
@@ -29,22 +30,39 @@ export default function Home() {
     );
   }
 
-  const handleLogin = () => {
-    if (email === "admin" && password === "admin") {
-      router.push("/home");
-    } else {
-      setErrorMessage("Invalid Email or Password");
+  const Login = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/login", {
+        phone: phone,
+        password: password,
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
     }
+  };
+  const handleLogin = () => {
+    if (phone.length === 10 && password.length > 8) {
+      Login();
+      setIsLoggedIn(true);
+    } else setErrorMessage("Invalid Credentials");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.headText}>Welcome To 42Contacts</Text>
       <TextInput
-        onChangeText={setEmail}
-        value={email}
+        onChangeText={(value) => {
+          if (value.length > 10) {
+            setErrorMessage("Phone number should be less than 10 digits");
+          } else {
+            setErrorMessage("");
+          }
+          setPhone(value);
+        }}
+        value={phone}
         style={styles.loginInput}
-        placeholder="Enter Email"
+        placeholder="Enter Phone Number"
       />
       <TextInput
         secureTextEntry
@@ -53,27 +71,49 @@ export default function Home() {
         style={styles.loginInput}
         placeholder="Enter Password"
       />
+      <Text style={styles.errorMsg}>{errorMessage}</Text>
       <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
-      <Text style={styles.errorMsg}>{errorMessage}</Text>
+      <Text style={styles.signupLink}>
+        Don't have an account?{" "}
+        <Text
+          style={styles.signUpTitle}
+          onPress={() => {
+            router.push("/SignUp");
+          }}
+        >
+          Sign Up
+        </Text>
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  signupLink: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  signUpTitle: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
   container: {
     flex: 1,
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#f5f5f5",
-    gap: 30,
+    gap: 20,
   },
   errorMsg: {
     color: "red",
-    fontSize: 16,
-    fontWeight: "semibold",
+    fontSize: 14,
+    fontWeight: "bold",
   },
   headText: {
     fontSize: 24,
@@ -81,7 +121,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   loginInput: {
-    width: "100%",
+    width: "80%",
     borderWidth: 1,
     height: 40,
     borderColor: "#000",

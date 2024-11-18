@@ -41,6 +41,8 @@ export default function RootLayout() {
           <Stack.Screen name="Profile/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="AddContact" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="SignUp" options={{ headerShown: false }} />
+
         </Stack>
       </ThemeProvider>
     </ContactsProvider>

@@ -6,15 +6,15 @@ const passport = require("passport");
 const Argon2 = require("argon2");
 const session = require("express-session");
 const jwt = require("jsonwebtoken");
-const LocalStrategy = require("passport-local").Strategy; // <-- Import LocalStrategy here
-const cookieParser = require("cookie-parser"); // <-- Import cookie-parser
+const LocalStrategy = require("passport-local").Strategy;
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const port = 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cookieParser()); // <-- Use cookie parser to read cookies
+app.use(cookieParser());
 const corsOptions = {
   origin: "http://localhost:8081", // Adjust to your frontend origin
   methods: "GET,POST,PUT,DELETE",
@@ -150,10 +150,11 @@ app.post("/register", async (req, res) => {
           // Redirect the user to the homepage
           res.json({
             message: "User registered successfully",
-            redirectUrl: "/homepage",
+            redirectUrl: "/home",
           });
         });
         stmt.finalize();
+        console.log("User registered successfully");
       }
     );
   } catch (err) {
@@ -175,7 +176,7 @@ app.post(
 
     res.cookie("token", token, { httpOnly: true, secure: false }); // Send the JWT token in a cookie
     delete user.password;
-    console.log(user);
+    console.log("User logged in successfully");
     res.json({ message: "Logged in successfully", user });
   }
 );
@@ -183,11 +184,13 @@ app.post(
 // Get all contacts for the authenticated user
 app.get("/contacts", authenticate, (req, res) => {
   const userId = req.user.id;
-
+  
   db.all("SELECT * FROM contacts WHERE user_id = ?", [userId], (err, rows) => {
     if (err) return res.status(400).json({ error: err.message });
     res.json({ contacts: rows });
   });
+
+  console.log("Contacts fetched successfully");
 });
 
 // Create a new contact
@@ -203,6 +206,8 @@ app.post("/contacts", authenticate, (req, res) => {
     res.json({ contact: { id: this.lastID, ...req.body } });
   });
   stmt.finalize();
+
+  console.log("Contact created successfully");
 });
 
 // Edit a contact
@@ -224,6 +229,8 @@ app.put("/contacts/:id", authenticate, (req, res) => {
       res.json({ updated: this.changes });
     }
   );
+
+  console.log("Contact updated successfully");
 });
 
 // Delete a contact
@@ -244,6 +251,8 @@ app.delete("/contacts/:id", authenticate, (req, res) => {
       res.json({ deleted: this.changes });
     }
   );
+
+  console.log("Contact deleted successfully");
 });
 
 // Send a message from one user to another
@@ -273,6 +282,8 @@ app.post("/messages", authenticate, (req, res) => {
       stmt.finalize();
     }
   );
+
+  console.log("Message sent successfully");
 });
 
 // Get all messages between the authenticated user and another user
@@ -288,12 +299,15 @@ app.get("/messages/:contactId", authenticate, (req, res) => {
       res.json({ messages: rows });
     }
   );
+
+  console.log("Messages fetched successfully");
 });
 
 // Logout user and clear cookies
 app.post("/logout", (req, res) => {
   res.clearCookie("token"); // Clear the token cookie
   res.json({ message: "Logged out successfully" });
+  console.log("User logged out successfully");
 });
 
 // Start server
